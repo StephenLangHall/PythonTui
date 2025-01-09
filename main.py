@@ -8,9 +8,7 @@ state = {
     'add': True,
     'grid': [[0 for _ in range(w)] for _ in range(h)],
     'key': '',
-
     'cur': [0, 0],
-
     'quit': False
 }
 
@@ -29,23 +27,23 @@ def update(state, keys):
     state['keys'] = keys
 
 def view(state):
-    cls()
+    s = cls()
     for y, row in enumerate(state['grid']):
         for x, cell in enumerate(row):
             if y == state['cur'][0] and x == state['cur'][1]:
-                color(234, 0)
-                print(cell, end=' ')
+                s += color(234, cell)
+                s += '  '
             else:
-                color(234, cell)
-                print(cell, end=' ')
-        color(9, 234)
-        print('')
-    print(state['key'])
+                s += color(234, 0)
+                s += '  '
+        s += color(9, 234) + '\n'
+    s += state['key']
+    return s
 
-altscreen(True)
+print(altscreen(True))
 while not state['quit']:
     keys = getpressed(['w', 's', 'a', 'd', 'q'])
     update(state, keys)
-    view(state)
+    print(view(state))
     time.sleep(0.1)
-altscreen(False)
+print(altscreen(False))

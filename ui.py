@@ -1,48 +1,46 @@
 def cls():
-    color(9, 234)
-    print('\033[J\033[H', end='')
+    return color(9, 234) + '\033[J\033[H'
 
 def goto(y: int, x: int):
-    print('\033[' + str(x) + ';' + str(y) + 'H', end='')
+    return '\033[' + str(x) + ';' + str(y) + 'H'
 def up(n: int):
-    print('\033[' + str(n) + 'A', end='')
+    return '\033[' + str(n) + 'A'
 def down(n: int):
-    print('\033[' + str(n) + 'B', end='')
+    return '\033[' + str(n) + 'B'
 def right(n: int):
-    print('\033[' + str(n) + 'C', end='')
+    return '\033[' + str(n) + 'C'
 def left(n: int):
-    print('\033[' + str(n) + 'D', end='')
+    return '\033[' + str(n) + 'D'
 
 def style(styles: list[str] = []):
+    finalstyle = ''
     for style in styles:
         if style == 'b':
-            print('\033[1m', end='')
+            finalstyle += '\033[1m'
         if style == 'i':
-            print('\033[3m', end='')
+            finalstyle += '\033[3m'
         if style == 'u':
-            print('\033[4m', end='')
+            finalstyle += '\033[4m'
         if style == 'B':
-            print('\033[22m', end='')
+            finalstyle += '\033[22m'
         if style == 'I':
-            print('\033[23m', end='')
+            finalstyle += '\033[23m'
         if style == 'U':
-            print('\033[24m', end='')
+            finalstyle += '\033[24m'
+    return finalstyle
 
 ### color table: https://user-images.githubusercontent.com/995050/47952855-ecb12480-df75-11e8-89d4-ac26c50e80b9.png
 def color(foreground: int, background: int):
-    print('\033[38;5;' + str(foreground) + 'm', end='')
-    print('\033[48;5;' + str(background) + 'm', end='')
+    return '\033[38;5;' + str(foreground) + 'm\033[48;5;' + str(background) + 'm'
 
 def hidecursor(on):
     if on:
-        print('\033[?25l', end='')
+        return '\033[?25l'
     else:
-        print('\033[?25h', end='')
+        return '\033[?25h'
 
 def altscreen(on):
     if on:
-        print('\033[?1049h', end='')
-        hidecursor(True)
+        return '\033[?1049h' + hidecursor(True)
     else:
-        print('\033[?1049l', end='')
-        hidecursor(False)
+        return '\033[?1049l' + hidecursor(False)

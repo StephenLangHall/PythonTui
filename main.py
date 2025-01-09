@@ -5,7 +5,6 @@ from util import *
 h, w = size()
 state = {
     'add': True,
-    'grid': [[0 for _ in range(w)] for _ in range(h)],
     'cur': {
         'y': 20,
         'x': 20,
@@ -41,17 +40,15 @@ def update(state, keys):
     if state['cur']['x'] > w-1:
         state['cur']['x'] = 0
 
-    state['grid'] = [[0 for _ in range(w)] for _ in range(h)]
-
 def view(state):
     s = blank(False) + cls()
-    for y, row in enumerate(state['grid']):
-        for x, cell in enumerate(row):
+    for y in range(h-1):
+        for x in range(w-1):
             if y == state['cur']['y'] and x == state['cur']['x']:
                 s += color(234, random.randrange(1,9,1))
                 s += '  '
             else:
-                s += color(234, cell)
+                s += color(234, 0)
                 s += '  '
         s += color(9, 0) + '\n'
     s += '\nFPS: ' + str(state['fps'])

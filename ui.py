@@ -1,5 +1,5 @@
 def cls():
-    return color(9, 234) + '\033[J\033[H'
+    return color(9, 0) + '\033[J\033[H'
 
 def goto(y: int, x: int):
     return '\033[' + str(x) + ';' + str(y) + 'H'
@@ -44,3 +44,9 @@ def altscreen(on):
         return '\033[?1049h' + hidecursor(True)
     else:
         return '\033[?1049l' + hidecursor(False)
+
+def blank(on):
+    if on:
+        return '\033[8m'
+    else:
+        return '\033[28m'

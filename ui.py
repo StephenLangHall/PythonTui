@@ -1,3 +1,5 @@
+import os
+
 def cls():
     return color(9, 0) + '\033[J\033[H'
 
@@ -50,3 +52,7 @@ def blank(on):
         return '\033[8m'
     else:
         return '\033[28m'
+
+def size():
+    rows, columns = os.popen('stty size', 'r').read().split()
+    return (int(rows), int(columns))

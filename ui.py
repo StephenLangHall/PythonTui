@@ -1,10 +1,9 @@
 import os
 
-def cls():
-    return color(9, 0) + '\033[J\033[H'
-
+def clear(color):
+    return color + '\033[J'
 def goto(y: int, x: int):
-    return '\033[' + str(x) + ';' + str(y) + 'H'
+    return '\033[' + str(y) + ';' + str(x) + 'f'
 def up(n: int):
     return '\033[' + str(n) + 'A'
 def down(n: int):
@@ -36,23 +35,20 @@ def color(foreground: int, background: int):
     return '\033[38;5;' + str(foreground) + 'm\033[48;5;' + str(background) + 'm'
 
 def hidecursor(on):
-    if on:
-        return '\033[?25l'
-    else:
-        return '\033[?25h'
+    if on: return '\033[?25l'
+    else:  return '\033[?25h'
 
 def altscreen(on):
-    if on:
-        return '\033[?1049h' + hidecursor(True)
-    else:
-        return '\033[?1049l' + hidecursor(False)
+    if on: return '\033[?1049h'
+    else:  return '\033[?1049l'
 
 def blank(on):
-    if on:
-        return '\033[8m'
-    else:
-        return '\033[28m'
+    if on: return '\033[8m'
+    else:  return '\033[28m'
 
 def size():
     rows, columns = os.popen('stty size', 'r').read().split()
     return (int(rows), int(columns))
+
+def RESET():
+    return '\033[0m'

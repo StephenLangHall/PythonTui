@@ -1,70 +1,87 @@
-import time, random
+from keyboard import is_pressed
 from ui import *
-from util import *
 
 h, w = size()
+w //= 2
 state = {
     'add': True,
-    'cur': {
-        'y': 20,
-        'x': 20,
-        'yv': 0,
-        'xv': 0
-    },
     'quit': False,
     'fps': 0,
+    'ball': {
+        'y': 40,
+        'x': 40,
+        'yv': 0,
+        'xv': 0,
+        'color': 0,
+    },
 }
 
-def update(state, keys):
+def update(state):
     h, w = size()
-    if 'q' in keys:
+    w //= 2
+    if is_pressed('q'):
         state['quit'] = True
-    if 'w' in keys:
-        state['cur']['yv'] -= 1
-    if 's' in keys:
-        state['cur']['yv'] += 1
-    if 'a' in keys:
-        state['cur']['xv'] -= 1
-    if 'd' in keys:
-        state['cur']['xv'] += 1
+    if is_pressed('w'):
+        state['ball']['yv'] -= 2
+    if is_pressed('s'):
+        state['ball']['yv'] += 2
+    if is_pressed('a'):
+        state['ball']['xv'] -= 2
+    if is_pressed('d'):
+        state['ball']['xv'] += 2
 
-    state['cur']['x'] += state['cur']['xv']
-    state['cur']['y'] += state['cur']['yv']
+    if state['ball']['xv'] > 0:
+        state['ball']['xv'] -= 1
+    if state['ball']['xv'] < 0:
+        state['ball']['xv'] += 1
+    if state['ball']['yv'] > 0:
+        state['ball']['yv'] -= 1
+    if state['ball']['yv'] < 0:
+        state['ball']['yv'] += 1
 
-    if state['cur']['y'] < 0:
-        state['cur']['y'] = h-1
-    if state['cur']['y'] > h-1:
-        state['cur']['y'] = 0
-    if state['cur']['x'] < 0:
-        state['cur']['x'] = w-1
-    if state['cur']['x'] > w-1:
-        state['cur']['x'] = 0
+    state['ball']['x'] += state['ball']['xv']
+    state['ball']['y'] += state['ball']['yv']
+
+    if state['ball']['y'] < 0:
+        state['ball']['y'] = 0
+    if state['ball']['y'] > h-1:
+        state['ball']['y'] = h-1
+    if state['ball']['x'] < 0:
+        state['ball']['x'] = 0
+    if state['ball']['x'] > w-1:
+        state['ball']['x'] = w-1
+
+    if state['ball']['color'] >= 230:
+        state['ball']['color'] = 21
+    else:
+        state['ball']['color'] += 1
+        
 
 def view(state):
-    s = blank(False) + cls()
-    for y in range(h-1):
-        for x in range(w-1):
-            if y == state['cur']['y'] and x == state['cur']['x']:
-                s += color(234, random.randrange(1,9,1))
-                s += '  '
+    s = blank(False) + clear(color(9, 0))
+    for y in range(h):
+        for x in range(w):
+            if y == state['ball']['y'] and x == state['ball']['x']:
+                s += color(234, state['ball']['color'])
             else:
                 s += color(234, 0)
-                s += '  '
-        s += color(9, 0) + '\n'
-    s += '\nFPS: ' + str(state['fps'])
-    s += '\nX: ' + str(state['cur']['x'])
-    s += '\nY: ' + str(state['cur']['y'])
-    s += '\nVx: ' + str(state['cur']['xv'])
-    s += '\nVy: ' + str(state['cur']['yv'])
+            s += '  '
+        if y < h-1: s += color(9, 0) + '\n'
+    s += color(9, 0)
+    s += goto(0, 0) + 'FPS:      ' + str(state['fps']) + '\n'
+    s += goto(1, 0) + '\nball X:   ' + str(state['ball']['x'])
+    s += goto(2, 0) + '\nball Y:   ' + str(state['ball']['y'])
+    s += goto(3, 0) + '\nball Vx:  ' + str(state['ball']['xv'])
+    s += goto(4, 0) + '\nball Vy:  ' + str(state['ball']['yv'])
+    s += goto(5, 0) + '\nscreen H: ' + str(h)
+    s += goto(6, 0) + '\nscreen W: ' + str(w)
     return s + blank(True)
 
-InitialTime = time.time()
-print(altscreen(True))
+print(hidecursor(True))
+
 while not state['quit']:
-    keys = getpressed(['w', 's', 'a', 'd', 'q'])
-    update(state, keys)
+    update(state)
     print(view(state))
-    state['fps'] = 1 / (time.time() - InitialTime)
-    InitialTime = time.time()
-    time.sleep(0.05)
-print(altscreen(False))
+#    time.sleep(0.05)
+
+print(RESET())

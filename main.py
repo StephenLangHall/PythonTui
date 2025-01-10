@@ -1,3 +1,4 @@
+from time import time
 from keyboard import is_pressed
 from ui import *
 
@@ -68,20 +69,23 @@ def view(state):
             s += '  '
         if y < h-1: s += color(9, 0) + '\n'
     s += color(9, 0)
-    s += goto(0, 0) + 'FPS:      ' + str(state['fps']) + '\n'
-    s += goto(1, 0) + '\nball X:   ' + str(state['ball']['x'])
-    s += goto(2, 0) + '\nball Y:   ' + str(state['ball']['y'])
-    s += goto(3, 0) + '\nball Vx:  ' + str(state['ball']['xv'])
-    s += goto(4, 0) + '\nball Vy:  ' + str(state['ball']['yv'])
-    s += goto(5, 0) + '\nscreen H: ' + str(h)
-    s += goto(6, 0) + '\nscreen W: ' + str(w)
+    s += goto(1, 0) + 'FPS:      ' + str(state['fps'])
+    s += goto(2, 0) + 'ball X:   ' + str(state['ball']['x'])
+    s += goto(3, 0) + 'ball Y:   ' + str(state['ball']['y'])
+    s += goto(4, 0) + 'ball Vx:  ' + str(state['ball']['xv'])
+    s += goto(5, 0) + 'ball Vy:  ' + str(state['ball']['yv'])
+    s += goto(6, 0) + 'screen H: ' + str(h)
+    s += goto(7, 0) + 'screen W: ' + str(w)
     return s + blank(True)
 
 print(hidecursor(True))
+start = time()
 
 while not state['quit']:
     update(state)
     print(view(state))
+    state['fps'] = 1/(time() - start)
+    start = time()
 #    time.sleep(0.05)
 
 print(RESET())

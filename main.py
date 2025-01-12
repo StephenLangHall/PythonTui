@@ -1,5 +1,5 @@
-from time import time
-from keyboard import is_pressed
+from time import time, sleep
+from keyboard import is_pressed as pressed
 from ui import *
 
 h, w = size()
@@ -20,17 +20,20 @@ state = {
 def update(state):
     h, w = size()
     w //= 2
-    if is_pressed('q'):
+
+    # Ball Controls
+    if pressed('q'):
         state['quit'] = True
-    if is_pressed('w'):
+    if pressed('w'):
         state['ball']['yv'] -= 2
-    if is_pressed('s'):
+    if pressed('s'):
         state['ball']['yv'] += 2
-    if is_pressed('a'):
+    if pressed('a'):
         state['ball']['xv'] -= 2
-    if is_pressed('d'):
+    if pressed('d'):
         state['ball']['xv'] += 2
 
+    # Ball Drag
     if state['ball']['xv'] > 0:
         state['ball']['xv'] -= 1
     if state['ball']['xv'] < 0:
@@ -40,9 +43,11 @@ def update(state):
     if state['ball']['yv'] < 0:
         state['ball']['yv'] += 1
 
+    # Update Ball Position
     state['ball']['x'] += state['ball']['xv']
     state['ball']['y'] += state['ball']['yv']
 
+    # Ball Boundaries
     if state['ball']['y'] < 0:
         state['ball']['y'] = 0
     if state['ball']['y'] > h-1:
@@ -52,11 +57,12 @@ def update(state):
     if state['ball']['x'] > w-1:
         state['ball']['x'] = w-1
 
+    # Update Ball Color
     if state['ball']['color'] >= 230:
         state['ball']['color'] = 21
     else:
         state['ball']['color'] += 1
-        
+
 
 def view(state):
     s = blank(False) + clear(color(9, 0))
@@ -86,6 +92,6 @@ while not state['quit']:
     print(view(state))
     state['fps'] = 1/(time() - start)
     start = time()
-#    time.sleep(0.05)
+    sleep(0.01)
 
-print(RESET())
+print(reset())

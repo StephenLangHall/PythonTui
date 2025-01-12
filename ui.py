@@ -50,5 +50,5 @@ def size():
     rows, columns = os.popen('stty size', 'r').read().split()
     return (int(rows), int(columns))
 
-def RESET():
+def reset():
     return '\033[0m'

@@ -1,4 +1,5 @@
 import os
+import sh
 
 def clear(color):
     return color + '\033[J'
